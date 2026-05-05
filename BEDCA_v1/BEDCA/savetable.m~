@@ -1,0 +1,14 @@
+function savetable(tab,fname)
+  %
+%
+  %
+  % NJB Oct 2020
+
+
+  % Summary stats Rows mu, taux, taux, sdx, sdz
+
+  summarystats=[tab.means; tab.medians; tab.sd];
+  
+
+  
+writetable(array2table(summarystats','VariableNames',{'Mean','Median','StandardDeviation'},'RowNames',tab.params),fname);

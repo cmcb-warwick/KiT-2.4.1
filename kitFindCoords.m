@@ -1,0 +1,169 @@
+function job=kitFindCoords(job, reader, channel)
+%KITFINDCOORD Find kinetochore coordinates
+%
+% SYNOPSIS: job=kitFindCoords(job, raw, channel)
+%
+% INPUT job: Struct containing tracking job setup options.
+%            Requires at least the following fields:
+%
+%       reader: BioFormats reader.
+%
+%       channel: Channel to find coords in.
+%
+% OUTPUT job: as input but with updated values.
+%
+% Created by: J. W. Armond
+% Modified by: C. A. Smith
+% Copyright (c) 2016 C. A. Smith
+% Modified by C. C. Conway (2022)
+
+% Method of fixing spot locations: centroid or Gaussian MMF, or none.
+method = job.options.coordMode{channel};
+% Handle old jobset versions.
+if ~isfield(job.options,'spotMode')
+  spotMode = 'histcut';
+else
+  % Method of identify first spot candidates: Histogram cut 'histcut',
+  % adaptive threshold 'adaptive', or  multiscale wavelet product 'wavelet'.
+  spotMode = job.options.spotMode{channel};
+end
+
+% Set up data struct.
+options = job.options;
+
+nFrames = job.metadata.nFrames;
+is3D = job.metadata.is3D;
+ndims = 2 + is3D;
+filters = createFilters(ndims,job.dataStruct{channel}.dataProperties);
+
+% Read image
+movie = kitReadWholeMovie(reader,job.metadata,channel,job.ROI.crop,0,1);
+[imageSizeX,imageSizeY,imageSizeZ,~] = size(movie);
+
+% Initialize output structure
+localMaxima = repmat(struct('cands',[]),nFrames,1);
+
+% Find candidate spots.
+switch spotMode
+  case 'histcut'
+    kitLog('Detecting particle candidates using unimodal histogram threshold');
+    spots = cell(nFrames,1);
+    for i=1:nFrames
+      img = movie(:,:,:,i);
+      spots{i} = histcutSpots(img,options,job.dataStruct{channel}.dataProperties);
+    end
+
+  case 'adaptive'
+    kitLog('Detecting particle candidates using adaptive thresholding');
+    if ~isfield(options,'adaptiveLambda')
+      options.adaptiveLambda = 1; % if lambda not set, then set to 1 as default
+    end
+    if ~isfield(options,'realisticNumSpots')
+      options.realisticNumSpots = 92;
+    end
+    if ~isfield(options, 'globalBackground')
+      options.globalBackground = 1;
+    end
+    if ~isfield(options, 'robustObjectiveFn')
+      options.robustObjectiveFn = 1;
+    end
+    spots = adaptiveSpots(movie,options.adaptiveLambda,...
+                          options.realisticNumSpots,options.globalBackground,...
+			  options.robustObjectiveFn,...
+                          options.debug.showAdaptive);
+
+
+  case 'wavelet'
+    kitLog('Detecting particle candidates using multiscale wavelet product');
+     options.waveletLevelThresh = waveletAdapt(movie,options);
+     job.options = options;
+     kitSaveJob(job); % Record used value.
+
+    for i=1:nFrames
+      img = movie(:,:,:,i);
+      spots{i} = waveletSpots(img,options);
+    end
+    
+  case 'neighbour'
+    kitLog('Detecting particle candidates using neighbouring channel');
+    refDataStruct = job.dataStruct{options.coordSystemChannel};
+    [spots,spotIDs] = neighbourSpots(movie,refDataStruct,channel,job.metadata,options); %CCC edit from neighbourSpots 2022/10/19
+    
+  case 'manual'
+    kitLog('Detecting particle candidates using manual detection');
+    spots = manualDetection(movie,job.metadata,options);
+    
+  otherwise
+    error('Unknown particle detector: %s',spotMode);
+end
+
+nSpots = zeros(nFrames,1);
+for i=1:nFrames
+  nSpots(i) = size(spots{i},1);
+
+  % Round spots to nearest pixel and limit to image bounds.
+  if nSpots(i) > 1
+    spots{i} = bsxfun(@min,bsxfun(@max,round(spots{i}),1),[imageSizeX,imageSizeY,imageSizeZ]);
+  end
+
+  % Store the cands of the current image
+  % TODO this is computed in both spot detectors, just return it.
+  img = movie(:,:,:,i);
+  if verLessThan('images','9.2')
+    background = fastGauss3D(img,filters.backgroundP(1:3),filters.backgroundP(4:6));
+  else
+    background = imgaussfilt3(img,filters.backgroundP(1:3),'FilterSize',filters.backgroundP(4:6));
+  end
+  localMaxima(i).cands = spots{i};
+  if strcmp(spotMode,'neighbour')
+      localMaxima(i).spotID = spotIDs{i};
+  end
+  if nSpots(i) > 1
+    spots1D = sub2ind(size(img),spots{i}(:,1),spots{i}(:,2),spots{i}(:,3));
+  else
+    spots1D = [];
+  end
+  localMaxima(i).candsAmp = img(spots1D);
+  localMaxima(i).candsBg = background(spots1D);
+
+  % Visualize candidates.
+  if options.debug.showMmfCands ~= 0
+    showSpots(img,spots{i});
+    title(['Local maxima cands n=' num2str(size(spots{i},1))]);
+    drawnow;
+    switch options.debug.showMmfCands
+      case -1
+        pause;
+      case -2
+        keyboard;
+    end
+  end
+end
+kitLog('Average particles per frame: %.1f +/- %.1f',mean(nSpots),std(nSpots));
+
+% Refine spot candidates.
+switch method
+  case 'centroid'
+    job = kitCentroid(job,movie,localMaxima,channel);
+  case 'gaussian'
+    job = kitMixtureModel(job,movie,localMaxima,channel);
+    case 'none' % Edit from 'norefine' to 'none' A.D. 07/02/2023
+    % No refinement. Copy localMaxima to initCoords.
+    initCoord(1:nFrames) = struct('allCoord',[],'allCoordPix',[],'nSpots',0, ...
+                                  'amp',[],'bg',[]);
+    initCoord(1).localMaxima = localMaxima;
+    for i=1:nFrames
+      initCoord(i).nSpots = size(localMaxima(i).cands,1);
+      initCoord(i).allCoordPix = [localMaxima(i).cands(:,[2 1 3]) ...
+                          0.25*ones(initCoord(i).nSpots,3)];
+      initCoord(i).allCoord = bsxfun(@times, initCoord(i).allCoordPix,...
+        repmat(job.metadata.pixelSize,[1 2]));
+      initCoord(i).amp = [localMaxima(i).candsAmp zeros(initCoord(i).nSpots,1)];
+    end
+    % Store data.
+    job.dataStruct{channel}.initCoord = initCoord;
+    job.dataStruct{channel}.failed = 0;
+  otherwise
+    error(['Unknown coordinate finding mode: ' job.coordMode]);
+end
+

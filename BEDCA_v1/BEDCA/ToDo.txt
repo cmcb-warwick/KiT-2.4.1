@@ -1,0 +1,68 @@
+Methods: 
+Reduce fig generation convergence doubled up?. 
+Test TreatmentLib
+
+warnings on tail. Collate warnings.
+.csv for tab stat
+.csv for output
+warnings on convergence
+
+Non paired KT input.
+true values.? plot_mcmcang...
+
+
+
+Self contained dirs/files/
+Remove z-filter
+Remove emmanuelle specific addresses.
+Clean treatments. User inputs.
+Documentation.
+Put warnings for number KT pairs, number cells.
+
+ReRunEuclDist  to load MCMC run, find last point and rerun. Use a run id for all chains. Include in Master
+
+LoadDist -> lower case
+% typ='columns' loads a column file of 3D distances in form [Delta3D theta]. TO DO
+Models: 2 mu, disc (uniform points).
+Hierarchical model after kruskalWallis test
+
+Redo simulations with MCMC outrput.
+
+save MCMC traces
+Look at tau priors? Bias? DMSO? Simulation noisy? 
+multiple treatments
+Bub1 zero? prior strength? Possibly due to z filterdist too large.
+
+Compare output to filtered data. Inflation correction rel to filtered. DONE. Change hist to use sam e boxes
+Tab output. Done.
+
+
+Marginal alg  works.
+Try on data with z zeroed. (chromatic aberration correction bias?).
+Try on z-filtered data?
+Add convergence diag. Multi-chain.
+Check correlations taux-mu Sometimes negative????
+New algorithm with mu=0 for dual CENPA.
+
+
+
+*************************
+
+On the expt data (iM_161122_161206_170130_170213_170309_9G3C_dmso_sel) strong tau priors
+a=100;
+params.mu=80;
+params.sig=[25 75]; % Rough values
+algparams.priors.params={[70 10000],[a params.sig(1)^2*a],[a params.sig(2)^2*a]}; % 10% error priors 
+
+we get convergence to mu ~ 90 for suitable starting mu = 10-1000, sigx,sigz at their means.
+
+but mu ~ 0 for initialisation from priors- phi uniform.
+Write a prior for phi defined by taux.
+
+Suggests convergence problem.
+1. 
+2. Hamiltonian MCMC, or simulated annealing?
+
+Is there a bias?
+Try simulation with theta distribution as expt. Does this have mu -> 0 problem?
+What is mu bias.

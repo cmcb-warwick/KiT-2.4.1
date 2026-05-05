@@ -1,0 +1,12 @@
+function [mcmcparams mcmcrun mcmcrundirecs1 mcmcrundirecs2]=unpack_mcmcdat(mcmcdat)
+%  [mcmcparams mcmcrun mcmcrundirecs1 mcmcrundirecs2]=unpack_mcmcdat(mcmcdat)
+%
+% Trivial function to unpack mcmcdat structure
+%
+% NJB 2012
+
+
+mcmcparams=mcmcdat.mcmcparams;
+mcmcrun=mcmcdat.mcmcrun;
+mcmcrundirecs1=mcmcdat.mcmcrundirecs1;
+mcmcrundirecs2=mcmcdat.mcmcrundirecs2;

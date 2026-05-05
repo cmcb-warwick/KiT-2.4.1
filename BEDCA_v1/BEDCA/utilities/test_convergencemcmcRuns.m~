@@ -1,0 +1,188 @@
+function diagnos=test_convergencemcmcRuns(RunDIR,FileNam,N,burnin,implot,saveflag)
+% diagnos=test_convergencemcmcRuns(RunDIR,FileNam,N,burnin,implot,saveflag)
+%
+% This tests convergence of mcmc params, loading all N (if given, expected number with check)
+% runs. Plots histograms and mcmc output for all N. Visual convergence
+% 
+%
+% burnin (optional []) can be given
+% saveflag=1 to save
+%
+% Plots hidden states against mean.
+% 
+% NJB July 2013.
+
+
+% Font size
+fontsize=20;nsds=8; % max number sds to plot in time series
+
+
+% load data over all runs into array mcmcdat
+mcmcdat=load_mcmc_runs(RunDIR,FileNam,N,'all');
+
+if length(mcmcdat)<3
+diagnos=[];
+return;
+end
+
+
+% unpack first one.
+[mcmcparams mcmcrun mcmcruntheta mcmcrunphi]=unpack_mcmcdat(mcmcdat(1));
+
+N=length(mcmcdat);
+cols=jet(N);
+paramnams=mcmcparams.varnames;
+truevalues=mcmcparams.truevalues;
+SAVDIR=mcmcparams.savedir;
+FileNam=mcmcparams.filename;
+Dat=mcmcparams.datafile;
+
+if isempty(burnin)
+burnin=mcmcparams.burnin;  % Burnin is after sampling rate allowed for 
+end
+
+% Compute diagnostic
+diagnos.GR=convergence_diagnosticGR(mcmcdat,burnin);
+
+if ~implot
+return;
+end
+
+FileNam=[FileNam 'FigsConv/'];
+[status,message,messageid] = mkdir([SAVDIR '/' FileNam]);
+
+nsamples=size(mcmcrun,1)-burnin+1;
+
+
+% Plot the data
+% examine_traj(Dat,[],[],[SAVDIR '/' FileNam],mcmcparams.nam);
+
+paramnams=mcmcparams.varnames;
+
+H=figure;subplot(2,ceil(length(paramnams)/2),1); % Summary plot
+J=figure;subplot(2,ceil(length(paramnams)/2),1); % Summary plot
+
+for j=1:length(paramnams) % Run over parameters
+
+figure;subplot(1,2,1);hold on
+
+for r=1:N
+  plot(mcmcdat(r).mcmcrun(:,j),'Color',cols(r,:));
+end
+ylabel(paramnams{j});xlabel('sample number');
+
+%figure;
+subplot(1,2,2);hold on
+samples=[];
+  for r=1:N
+[h,x]=hist(mcmcdat(r).mcmcrun(burnin:end,j),100);
+plot(x,h/(sum(h)*(x(2)-x(1))),'Color',cols(r,:));
+samples=[samples; mcmcdat(r).mcmcrun(burnin:end,j)];
+end
+
+%
+% Plot priors. This needs to read the distribution type
+%
+
+if (~isempty(truevalues) & length(truevalues) >=j)
+plot(truevalues(j),0,'r*','MarkerSize',15)
+end
+
+% Put diagnostic in title
+title(['Posterior ' paramnams{j}],'FontSize',fontsize)
+xlabel(paramnams{j},'FontSize',fontsize)
+set(gca,'FontSize',fontsize);
+
+subplot(1,2,1); % set scales
+mv=mean(samples);sd=std(samples);
+y=ylim; 
+if y(1)<mv-nsds*sd
+y(1)=mv-nsds*sd;
+end
+if y(2)>mv+nsds*sd
+y(2)=mv+nsds*sd;
+end
+if y(2)>y(1)
+ylim(y);
+end
+title(['GRc ' num2str(diagnos.GR.Rc(j))]);
+
+
+if saveflag
+saveas(gcf,[SAVDIR  '/' FileNam 'Posterior_' paramnams{j} '.fig'],'fig');
+  print('-depsc',[SAVDIR  '/' FileNam 'Posterior_' paramnams{j} '.eps']);
+end
+
+% Repeat plots in summary
+figure(H);
+subplot(2,ceil(length(paramnams)/2),j);hold on;
+for r=1:N
+	 plot(mcmcdat(r).mcmcrun(:,j),'Color',cols(r,:));
+end
+if y(2)>y(1)
+ylim(y);
+end
+xlim([0 length(mcmcdat(r).mcmcrun(:,j))]);
+ylabel(paramnams{j});xlabel('sample number');
+
+%figure;
+figure(J)
+subplot(2,ceil(length(paramnams)/2),j);hold on;
+for r=1:N
+[h,x]=hist(mcmcdat(r).mcmcrun(burnin:end,j),100);
+plot(x,h/(sum(h)*(x(2)-x(1))),'Color',cols(r,:));
+end
+xlabel(paramnams{j});
+title(['GRc ' num2str(diagnos.GR.Rc(j))]);
+
+end %j
+
+if saveflag
+figure(H)
+saveas(gcf,[SAVDIR  '/' FileNam 'ConvPosteriorSamples.fig'],'fig');
+  print('-depsc',[SAVDIR  '/' FileNam 'ConvPosteriorSamples.eps']);
+figure(J)
+saveas(gcf,[SAVDIR  '/' FileNam 'ConvPosteriorSummary.fig'],'fig');
+  print('-depsc',[SAVDIR  '/' FileNam 'ConvPosteriorSummary.eps']);
+end
+
+
+% examine discrete hidden states. 
+
+for r=1:N
+hstate1(r,:)=mean(mcmcdat(r).mcmcruntheta(burnin:end,:),1);
+%hstate2(r,:)=mean(mcmcdat(r).mcmcruntheta(burnin:end,:),1);
+end
+
+st1=mean(hstate1,1);
+%st2=mean(hstate2,1);
+
+figure;%subplot(1,2,1);
+hold on;
+for r=1:N
+  plot(st1,hstate1(r,:),'*','Color',cols(r,:));
+end
+title('Hidden state 1 at each time','FontSize',fontsize)
+xlabel('Mean over runs','FontSize',fontsize)
+ylabel('Ave on specified run','FontSize',fontsize)
+
+if 0==1
+  figure;
+subplot(1,2,2);
+hold on;
+for r=1:N
+  plot(st2,hstate2(r,:),'*','Color',cols(r,:));
+end
+title('Hidden state 2 at each time','FontSize',fontsize)
+xlabel('Mean over runs','FontSize',fontsize)
+ylabel('Ave on specified run','FontSize',fontsize)
+end
+  
+if saveflag
+saveas(gcf,[SAVDIR  '/' FileNam 'ConvPosterior_hiddenstates.fig'],'fig');
+  print('-depsc',[SAVDIR  '/' FileNam 'ConvPosterior_hiddenstates.eps']);
+end
+
+
+
+
