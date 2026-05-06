@@ -1,0 +1,22 @@
+
+
+This is for Euclidean distance correction of 3D spinning disc microscope
+
+Use the driver (now a function, see MasterRunExpts with some calling examples)
+
+EuclDistCorrection_Driver_fn (add new experiments in ExptData_List)
+
+MCMC runs are saved in
+MCMCruns
+
+You can load an mcmcrun with
+
+load_mcmc_runs (unpackmcmcdat can be useful)
+
+To generate statistics (automatic with MCMC run) use
+create_outputs
+
+Figures are:
+Figures Posteriors for mu, sdx, sdz
+MCMC_EuclDistMargFigs Posteriors of MC variables
+MCMC_EuclDistMargFigsConv  Convergence plots

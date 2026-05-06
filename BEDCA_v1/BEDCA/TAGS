@@ -1,0 +1,1301 @@
+
+Analyse-inferencewrtmu.m,363
+% Mean E[E21,377
+% Mean E[\mu], median,21,377
+% Mean E[\mu], median, skew,21,377
+% Mean E[E22,463
+% Mean E[\tau_xz], median,22,463
+% Mean E[\tau_xz], median, skew,22,463
+  % Loop over MCMC runs,26,560
+  FilesArray=29,619
+muv=31,762
+mumean=33,797
+musd=34,808
+muiq=35,817
+tauxm=36,826
+tauxsd=37,836
+tauzm=38,847
+tauzsd=39,857
+     % Pair 56,1094
+
+EuclDistCorrection_Driver.m,1653
+  dataid={4,'DMSO'};  % First is id below in FileNames{FileNames20,278
+   specnam=21,502
+   specnam='_a4'; % Add a specific nam,21,502
+filterpars.filterdist=filterdist24,595
+filterpars.zfilterz=zfilterz25,663
+filterpars.zfilterz=100; % zfilter value. Comparison only,25,663
+% Each has a structure with treatment categories 28,812
+FileNames{FileNames32,1007
+FileNames{FileNames33,1081
+FileNames{FileNames34,1157
+FileNames{FileNames35,1229
+ExptDats{1}.name='HeLaTwoColourCENPA'; ExptDats{1}.fluorophore=fluorophore42,1392
+ExptDats{2}.name=name43,1461
+ExptDats{2}.name='HeLaCENPANdc80'; ExptDats{2}.fluorophore=fluorophore43,1461
+ExptDats{3}.name=name44,1527
+ExptDats{3}.name='RPECENPCNdc809G3'; ExptDats{3}.fluorophore=fluorophore44,1527
+ExptDats{4}.name=name45,1594
+ExptDats{4}.name='RPECENPCBub1'; ExptDats{4}.fluorophore=fluorophore45,1594
+ExptDats{5}.name=name46,1663
+ExptDats{5}.name='RPECENPCTwoAb'; ExptDats{5}.fluorophore=fluorophore46,1663
+RunDIR=53,1807
+initialisetype=54,1829
+params.expansionfactor=expansionfactor55,1898
+algstr=56,1939
+params.mu=mu58,1953
+a=62,2074
+a=65,2233
+a=68,2383
+brkstr=75,2542
+FileNameSh=83,2840
+   ExptDat=85,2894
+  % A=100,3238
+unts=102,3289
+% MCMC Run length. marg 114,3444
+algparams.unts=unts128,3814
+algparams.truevalues=truevalues129,3835
+algparams.filters=filters130,3860
+ModNam=132,3891
+algparams.priors.types=types146,4295
+algparams.priors.types={'Gaussian','Gamma','Gamma'}; % Gaussian mean variance,146,4295
+algparams.priors.params=params147,4434
+%algparams.priors.params=params148,4543
+J=164,5047
+nam=172,5274
+convergencediagnos=174,5300
+
+EuclDistCorrection_Driver_fn.m,1689
+function 1,0
+  % Weak mu prior. Medium/strong sigx,21,1267
+  % Weak mu prior. Medium/strong sigx,sigz prior. a=21,1267
+ModNam=31,1491
+  dataid=37,1646
+  dataid={exptnum,runtreatment};  % First is id below in FileNames{FileNames37,1646
+RunDIR=43,1961
+initialisetype=44,1983
+params.expansionfactor=expansionfactor45,2052
+params.expansionfactor=1;    % For prior. Not being used,45,2052
+nsamples=46,2121
+specnam=55,2329
+   a=57,2396
+params.mu=mu63,2510
+params.sig=sig71,2754
+%params.sig=sig73,2824
+params.sig=sig79,3045
+brkstr=88,3192
+   FileNameSh=96,3490
+   ExptDat=98,3558
+else117,4010
+% A=128,4299
+unts=130,4346
+% MCMC Run length. marg 133,4412
+algparams.numchains=numchains139,4556
+%length run options.nsteps,nsteps142,4584
+%length run options.nsteps, number chains options.nchains,nchains142,4584
+algparams.n=n147,4802
+algparams.subsample=subsample150,4827
+algparams.burnin=burnin151,4875
+algparams.bloks=bloks155,5010
+algparams.savdir=savdir157,5033
+   algparams.savangles savangles161,5165
+algparams.scaleparams=scaleparams163,5219
+algparams.scaleparams.a=a164,5249
+algparams.initialisetype=initialisetype165,5276
+algparams.paramnames=paramnames166,5343
+algparams.unts=unts167,5386
+algparams.truevalues=truevalues168,5407
+algparams.filters=filters169,5432
+algparams.priors.types=types182,5801
+algparams.priors.types={'Gaussian','Gamma','Gamma'}; % Gaussian mean variance,182,5801
+algparams.priors.params=params183,5940
+%algparams.priors.params=params184,6049
+%algparams.priors.params=params190,6241
+rundirs=198,6553
+J=209,6754
+nam=216,6980
+rundirs{rundirs218,7090
+disp(221,7143
+convergencediagnos=229,7273
+
+ExptData_list.m,1921
+ExptDataLoc=11,206
+%FileNames{FileNames12,244
+% Compilation sets over days 14,352
+FileNames{FileNames16,467
+FileNames{FileNames17,532
+FileNames{FileNames18,610
+FileNames{FileNames19,672
+FileNames{FileNames20,757
+FileNames{FileNames21,828
+FileNames{FileNames22,896
+FileNames{FileNames23,966
+FileNames{FileNames24,1015
+ExptDats{1}.name=name29,1213
+ExptDats{2}.name=name30,1246
+ExptDats{3}.name=name31,1279
+ExptDats{4}.name=name32,1311
+ExptDats{5}.name=name33,1343
+ExptDats{6}.name=name34,1376
+ExptDats{7}.name=name35,1413
+ExptDats{8}.name=name36,1450
+ExptDats{9}.name=name37,1487
+ExptDats{10}.name=name38,1518
+ExptDats{11}.name=name39,1551
+ExptDats{1}.group=group42,1657
+ExptDats{1}.group=[1 2];ExptDats{2}.group=group42,1657
+ExptDats{3}.group=group43,1714
+ExptDats{3}.group=[3 4];ExptDats{4}.group=group43,1714
+ExptDats{6}.group=group44,1771
+ExptDats{7}.group=group45,1798
+ExptDats{8}.group=group46,1825
+ExptDats{9}.group=group47,1852
+ExptDats{1}.treatment=treatment49,1876
+ExptDats{1}.treatment='DMSO';ExptDats{3}.treatment=treatment49,1876
+ExptDats{2}.treatment=treatment50,1935
+ExptDats{2}.treatment='noc2hr';ExptDats{4}.treatment=treatment50,1935
+ExptDats{5}.treatment=treatment51,1998
+ExptDats{6}.treatment=treatment52,2030
+ExptDats{7}.treatment=treatment53,2060
+ExptDats{8}.treatment=treatment54,2092
+ExptDats{11}.treatment=treatment55,2126
+ExptDats{1}.fluorophore=fluorophore58,2161
+ExptDats{2}.fluorophore=fluorophore59,2191
+ExptDats{3}.fluorophore=fluorophore60,2221
+ExptDats{4}.fluorophore=fluorophore61,2251
+ExptDats{5}.fluorophore=fluorophore62,2281
+ExptDats{6}.fluorophore=fluorophore63,2311
+ExptDats{7}.fluorophore=fluorophore64,2342
+ExptDats{8}.fluorophore=fluorophore65,2373
+ExptDats{9}.fluorophore=fluorophore66,2404
+ExptDats{10}.fluorophore=fluorophore67,2435
+ExptDats{11}.fluorophore=fluorophore68,2466
+
+ExptData_listCorrupted.m,844
+ExptDataLoc=11,206
+FileNames{FileNames12,248
+FileNames{FileNames13,326
+FileNames{FileNames14,387
+FileNames{FileNames15,450
+FileNames{FileNames16,509
+FileNames{FileNames17,599
+ExptDats{1}.name=name20,709
+ExptDats{1}.name='HeLaTwoColourCENPA'; ExptDats{1}.fluorophore=fluorophore20,709
+ExptDats{2}.name=name21,778
+ExptDats{2}.name='HeLaCENPANdc80'; ExptDats{2}.fluorophore=fluorophore21,778
+ExptDats{3}.name=name22,844
+ExptDats{3}.name='RPECENPCNdc809G3'; ExptDats{3}.fluorophore=fluorophore22,844
+ExptDats{4}.name=name23,911
+ExptDats{4}.name='RPECENPCBub1'; ExptDats{4}.fluorophore=fluorophore23,911
+ExptDats{5}.name=name24,974
+ExptDats{5}.name='RPECENPCTwoAb'; ExptDats{5}.fluorophore=fluorophore24,974
+ExptDats{6}.name=name25,1038
+ExptDats{6}.name='RPECENPC9G3'; ExptDats{6}.fluorophore=fluorophore25,1038
+
+ExptData_list_orig.m,154
+ExptDataLoc=11,206
+FileNames{FileNames12,235
+ExptDats{1}.name=name15,373
+ExptDats{1}.name='RPECENPC9G3'; ExptDats{1}.fluorophore=fluorophore15,373
+
+MasterRunExpts.m,1278
+filterpars.zfilterz=zfilterz18,355
+filterpars.zfilterz=100; % zfilter value. Comparison only,18,355
+options=19,433
+% FileNames{FileNames23,449
+ExptData_list  % loads the ExptData List26,535
+%options.a=a30,650
+%options.nsteps=nsteps31,674
+%options.nchains=nchains32,717
+%options.mu=mu34,753
+%options.mu=5;options.sigmeans=sigmeans34,753
+filterpars.filterdist=filterdist35,793
+% Emanuele USE THIS to run. Increase nsteps 38,864
+  options.a=25;options.mu=mu53,1255
+  options.a=25;options.mu=5;options.sigmeans=sigmeans53,1255
+filterpars.filterdist=filterdist54,1309
+% FileNames{FileNames59,1444
+options.a=a62,1521
+%options.mu=mu63,1535
+%options.mu=5;options.sigmeans=sigmeans63,1535
+filterpars.filterdist=filterdist64,1575
+EuclDistCorrection_Driver_fn(4,'DMSO','',filterpars,options)66,1644
+EuclDistCorrection_Driver_fn(4,'DMSO','',filterpars,options); % Gave mu=66,1644
+% FileNames{FileNames73,1799
+%options.mu=mu77,1909
+%options.mu=5;options.sigmeans=sigmeans77,1909
+filterpars.filterdist=filterdist78,1949
+filterpars.filterdist=200; % max 3D distance allowed in sample data78,1949
+EuclDistCorrection_Driver_fn(6,'DMSO','',filterpars,options)81,2090
+EuclDistCorrection_Driver_fn(6,'DMSO','',filterpars,options); % Gave mu=81,2090
+
+Master_SimTests.m,532
+  fontsize=10,108
+filstem=25,371
+filmid=26,420
+filend=27,439
+muv=29,455
+Hmns=30,477
+Hmns=figure;hold on;30,477
+Hmeds=31,498
+Hmeds=figure;hold on;31,498
+Hsd=32,520
+Hsd=figure;hold on;32,520
+meds=37,570
+sds=38,579
+mns=44,776
+meds=47,811
+sds=50,845
+figure(68,1239
+figure(80,1548
+figure(93,1862
+j=106,2180
+kv=108,2195
+	col=113,2252
+burnin=118,2417
+       str{str125,2568
+i=126,2607
+legend(131,2638
+legend(142,2873
+legend(154,3116
+% this case has mu tail mu=163,3343
+  B=165,3379
+k=185,4089
+  B=186,4094
+
+ReRunMCMC_eucldist.m,598
+function convergencediagnos=1,0
+toconvergence.Rc=Rc24,773
+ffc=30,950
+dstamp=50,1297
+ncurr=64,1574
+subsamplecurr=65,1599
+rundata=67,1635
+rundata.init=init68,1659
+rundata.initthetas=initthetas69,1696
+rundata.n=n71,1746
+rundata.burnin=burnin72,1834
+% Restart chain with same subsampling77,2014
+mcmcrun=81,2174
+mcmcruntheta=82,2206
+mcmcrun=84,2254
+mcmcruntheta=86,2315
+mcmcparams.toconvergence.subsamplesorig=subsamplesorig90,2461
+mcmcparams.toconvergence.norig=norig91,2516
+mcmcparams.subsample=subsample93,2555
+mcmcparams.burnin=burnin94,2625
+convergencediagnos=98,2710
+
+RunMCMC_ECsimulateddata.m,1697
+function 1,0
+algstr=34,1504
+ModNam=35,1518
+implot=38,1622
+  dataid=42,1681
+  dataid={exptnum,runtreatment};  % First is id below in FileNames{FileNames42,1681
+RunDIR=48,1926
+initialisetype=49,1948
+params.expansionfactor=expansionfactor50,2017
+params.expansionfactor=1;    % For prior. Not being used,50,2017
+nsamples=51,2086
+specnam=59,2293
+   a=61,2360
+params.mu=mu67,2491
+params.sig=sig73,2590
+brkstr=78,2667
+   FileNameSh=86,2965
+   ExptDat=89,3034
+dats=104,3480
+dats={};simparams=104,3480
+Srce=105,3502
+treats=116,3740
+dats{dats118,3765
+treats{treats119,3783
+unts=122,3804
+% MCMC Run length. marg 125,3870
+algparams.numchains=numchains131,4014
+%length run options.nsteps,nsteps134,4042
+%length run options.nsteps, number chains options.nchains,nchains134,4042
+algparams.n=n139,4260
+algparams.subsample=subsample142,4285
+algparams.burnin=burnin143,4333
+algparams.bloks=bloks147,4468
+algparams.savdir=savdir149,4491
+   algparams.savangles savangles154,4689
+algparams.scaleparams=scaleparams156,4743
+algparams.scaleparams.a=a157,4773
+algparams.initialisetype=initialisetype158,4800
+algparams.paramnames=paramnames159,4867
+algparams.unts=unts160,4910
+algparams.truevalues=truevalues163,4999
+algparams.truevalues=truevalues167,5135
+algparams.filters=filters169,5164
+algparams.priors.types=types182,5533
+algparams.priors.types={'Gaussian','Gamma','Gamma'}; % Gaussian mean variance,182,5533
+algparams.priors.params=params183,5672
+%algparams.priors.params=params184,5781
+%algparams.priors.params=params190,5973
+rundirs=198,6285
+J=205,6388
+nam=212,6614
+rundirs{rundirs214,6724
+disp(217,6777
+convergencediagnos=225,6907
+
+RunMCMC_eucldist.m,1707
+function 1,0
+ModNam=41,1054
+% implot=44,1093
+% implot=1; % Set 44,1093
+% Load priors,48,1141
+%initparams=initparams58,1314
+%randomiseinit=randomiseinit59,1346
+paramnames=60,1384
+params=61,1415
+numchains=66,1470
+subsample=67,1499
+burnin=68,1528
+%randomisationerr randomisationerr70,1584
+%randomisationExpand randomisationExpand71,1630
+%init_hMC init_hMC72,1682
+SAVDIR=74,1728
+FileNam=82,1786
+SAVDIR=85,1833
+rundata.initthetas=initthetas107,2359
+rundata.initphis=initphis108,2418
+mu=113,2561
+rundata.init=init118,2656
+rundata.initthetas=initthetas119,2759
+rundata.initphis=initphis120,2802
+%rundata.initphis=initphis122,2903
+rundata.initphis=initphis123,2995
+mcmcparams.Expt=Expt157,3705
+mcmcparams.nam=nam158,3730
+mcmcparams.model=model159,3750
+mcmcparams.modelstem=modelstem160,3828
+mcmcparams.alg=alg161,3857
+mcmcparams.filename=filename162,3881
+mcmcparams.chain=chain163,3910
+mcmcparams.savedir=savedir164,3930
+mcmcparams.datestamp=datestamp165,3957
+mcmcparams.varnames=varnames166,4023
+mcmc.params.units=units167,4055
+mcmcparams.priors=priors168,4087
+mcmcparams.datafile=datafile169,4113
+%mcmcparams.initialparams_loaded=initialparams_loaded171,4139
+mcmcparams.runlength=runlength172,4191
+mcmcparams.subsample=subsample173,4229
+mcmcparams.burnin=burnin174,4261
+mcmcparams.truevalues=truevalues175,4303
+  % Look at phi,192,4779
+  options=193,4813
+  options.param=param194,4857
+options.param=param198,5000
+tab=202,5141
+tab.zfilterz=zfilterz203,5194
+   mcmcparams_dummy=210,5324
+  mcmcparams_dummy.savedir=savedir211,5356
+disp(218,5488
+  convergencediagnos=234,5874
+%list_unconvergedruns(list_unconvergedruns237,5904
+
+SimData_List.m,1239
+SimDataLoc=8,48
+%FileNames{FileNames9,75
+% Compilation sets over days 11,183
+FileNames{FileNames13,283
+FileNames{FileNames14,337
+FileNames{FileNames15,390
+% 10 runs with variable mu,17,445
+ExptDats{4+k}.name=name20,574
+ExptDats{4+k}.name='muvariation';ExptDats{4+k}.treatment=treatment20,574
+% 10 runs with variable mu,23,640
+ExptDats{14+k}.name=name26,770
+ExptDats{14+k}.name='muvariation';ExptDats{14+k}.treatment=treatment26,770
+FileNames{FileNames29,838
+ExptDats{25}.name=name30,885
+FileNames{FileNames31,907
+ExptDats{26}.name=name32,954
+FileNames{FileNames33,976
+ExptDats{27}.name=name34,1028
+FileNames{FileNames36,1051
+FileNames{FileNames37,1172
+ExptDats{2}.name=name41,1312
+ExptDats{3}.name=name42,1339
+ExptDats{4}.name=name43,1371
+ExptDats{28}.name=name44,1405
+ExptDats{29}.name=name45,1440
+ExptDats{1}.group=group48,1556
+ExptDats{1}.group=[1 2];ExptDats{2}.group=group48,1556
+ExptDats{3}.group=group49,1613
+ExptDats{3}.group=[3 4];ExptDats{4}.group=group49,1613
+ExptDats{1}.treatment=treatment51,1663
+ExptDats{1}.treatment='';ExptDats{3}.treatment=treatment51,1663
+ExptDats{2}.treatment=treatment52,1714
+ExptDats{2}.treatment='';ExptDats{4}.treatment=treatment52,1714
+
+check_updates.m,36
+% ktaux+0.5*(sumSqrpxy+sum(sum3,2
+
+compare_zthresh.m,865
+% Load data. dat is matrix 18,226
+J=29,485
+dat=31,544
+  J=36,596
+algparams.n=n42,754
+algparams.subsample=subsample43,773
+algparams.burnin=burnin44,796
+% For Tau dist Gamma(48,832
+algparams.priors.types=types52,1001
+algparams.priors.types={'Gaussian','Gamma','Gamma'}; % Gaussian mean variance,52,1001
+algparams.priors.params=params54,1109
+a=56,1183
+algparams.priors.params=params57,1190
+dphi=60,1341
+J=61,1365
+J=62,1421
+algparams.initthetas=initthetas68,1595
+algparams.initphis=initphis69,1656
+mu=74,1767
+algparams.init=init79,1867
+algparams.initthetas=initthetas80,1976
+algparams.initphis=initphis81,2021
+mcmcparams.truevalues=truevalues94,2291
+mcmcparams.savedir=savedir95,2360
+mcmcparams.filename=filename96,2387
+% Look at phi,105,2614
+  options=106,2646
+  options.param=param107,2690
+    options.param=param109,2810
+
+create_outputs.m,1064
+function tab=1,0
+boxs=13,393
+paramnams=15,403
+truevalues=16,435
+%FileNam=FileNam20,524
+   SAVDIR=22,560
+burnin=30,667
+mcmcrun=31,693
+figure;36,774
+figure;hold on;36,774
+J=37,790
+hm=40,856
+y=44,927
+j=49,1024
+subplot(70,1504
+j=84,1782
+  xv=94,2052
+plot(95,2085
+  % Create table d3D 118,2667
+tab.samplen=samplen128,3042
+tab.params=params129,3080
+tab.means=means130,3129
+tab.medians=medians131,3186
+tab.sd=sd132,3249
+tab.datmean=datmean133,3301
+tab.datmedian=datmedian134,3329
+tab.datsd=datsd135,3361
+tab.datskew=datskew136,3386
+tab.samplesize=samplesize137,3453
+tab.inflationmedian=inflationmedian138,3481
+% Use dat column 140,3532
+  J=141,3570
+tab.datzfiltermean=datzfiltermean142,3591
+tab.datzfiltermedian=datzfiltermedian143,3626
+tab.datzfiltersd=datzfiltersd144,3665
+tab.filteredsamplesize=filteredsamplesize145,3697
+tab.inflationzfiltermedian=inflationzfiltermedian146,3731
+figure;149,3875
+figure;hold on;149,3875
+%datsim=datsim155,4040
+datsim=157,4161
+tab.simReconstruction=simReconstruction158,4217
+
+extract_sphericalcoords.m,341
+function dat=1,0
+zfilterz=zfilterz/1000; % data in microns15,548
+    dat=21,724
+x=dset.x.all(:);  y=26,798
+x=dset.x.all(:);  y=dset.y.all(:);  z=26,798
+r=28,888
+N=29,915
+dat=31,938
+    x=33,1047
+    x=dset.x.all;  y=33,1047
+    x=dset.x.all;  y=dset.y.all;  z=33,1047
+r=35,1132
+dat=37,1160
+figure;45,1276
+figure;plot3(45,1276
+
+extract_sphericalcoordsOLD.m,170
+function dat=1,0
+x=17,591
+x=dset.x.all(:);  y=17,591
+x=dset.x.all(:);  y=dset.y.all(:);  z=17,591
+r=19,681
+N=20,708
+dat=22,731
+figure;28,866
+figure;plot3(28,866
+
+loadDistData.m,947
+function 1,0
+nams=26,1094
+filteron=30,1225
+   filteron=32,1243
+   zfilterz=39,1366
+A=43,1391
+fstr=46,1449
+   treatments{treatments68,1826
+ff=72,1860
+dats{dats73,1884
+searchstr=81,2123
+J=83,2146
+fndstr=84,2180
+treatments{treatments95,2421
+ff=96,2449
+dats{dats97,2484
+searchstr=101,2709
+J=103,2730
+fndstr=104,2764
+treatments{treatments115,3005
+ff=116,3031
+dats{dats117,3066
+searchstr1=121,3353
+searchstr2=122,3372
+J1=124,3397
+J1=strfind(lower(fstr),searchstr1);J2=124,3397
+fndstr=125,3468
+treatments{treatments136,3746
+ff=137,3768
+dats{dats142,4124
+searchstr=146,4341
+J=147,4361
+fndstr=149,4396
+treatments{treatments160,4637
+ff=161,4661
+dats{dats162,4696
+searchstr=166,4915
+J=168,4938
+fndstr=169,4972
+treatments{treatments180,5213
+ff=181,5239
+dats{dats182,5274
+searchstr=187,5497
+J=189,5523
+fndstr=190,5557
+treatments{treatments201,5798
+ff=202,5827
+dats{dats203,5862
+dats{dats215,6207
+
+loadDistDataOrig.m,944
+function 1,0
+nams=23,922
+filteron=27,1057
+   filteron=29,1077
+   zfilterz=36,1207
+A=40,1236
+fstr=43,1297
+   treatments{treatments65,1696
+ff=69,1734
+dats{dats70,1759
+searchstr=77,1896
+J=79,1921
+fndstr=80,1956
+treatments{treatments91,2208
+ff=92,2237
+dats{dats93,2273
+searchstr=97,2396
+J=99,2419
+fndstr=100,2454
+treatments{treatments111,2706
+ff=112,2733
+dats{dats113,2769
+searchstr1=117,2954
+searchstr2=118,2974
+J1=120,3001
+J1=strfind(lower(fstr),searchstr1);J2=120,3001
+fndstr=121,3073
+treatments{treatments132,3362
+ff=133,3385
+dats{dats134,3421
+searchstr=138,3536
+J=140,3559
+fndstr=141,3594
+treatments{treatments152,3846
+ff=153,3871
+dats{dats154,3907
+searchstr=158,4132
+J=160,4157
+fndstr=161,4192
+treatments{treatments172,4444
+ff=173,4471
+dats{dats174,4507
+searchstr=179,4737
+J=181,4765
+fndstr=182,4800
+treatments{treatments193,5052
+ff=194,5082
+dats{dats195,5118
+dats{dats209,5501
+
+load_mcmc_datas.m,47
+function D=1,0
+brkstr=14,193
+mcmcdat=21,333
+
+mcmc_ed_main3D.m,1352
+function 1,0
+%rwphi=rwphi23,744
+maxphi=24,770
+maxphi=0.5;minphi=24,770
+sampcnt=25,837
+tauxon=33,996
+tauzon=34,1006
+phion=35,1016
+thetaon=36,1025
+N=49,1430
+N=size(X,1);halfN=49,1430
+n=50,1474
+subsample=51,1502
+% Priors55,1572
+mu0=57,1634
+mu0=params(1);mupp=57,1634
+mu0=params(1);mupp=1/params(2);  % mean and precision57,1634
+ataux=59,1743
+ataux=params(1);ktaux=59,1743
+atauz=61,1831
+atauz=params(1);ktauz=61,1831
+thetai=64,1881
+thetai=zeros(1,N);phi=64,1881
+rX=67,1923
+rpxy=rX.*sin(thetaX); % Projected to xy 71,2001
+si=99,2678
+ci=100,2694
+cphi=101,2710
+savcnt=104,2752
+mcmcrun=105,2762
+mcmcruntheta=106,2799
+muf=113,3008
+        b=120,3132
+	mup=122,3197
+muf=125,3274
+sd=149,3691
+phip=150,3747
+J=151,3792
+  %figure;figure153,3913
+  %sum(sum155,4046
+%thetap=thetap170,4246
+thetap=172,4310
+sip=173,4367
+cip=174,4384
+alpha=176,4402
+alpha=177,4434
+  plot(182,4607
+%figure;figure188,4755
+%figure;figure189,4804
+%figure;figure190,4868
+J=195,4941
+sampcnt=204,5142
+sampcnt=210,5349
+mcmcparams.alg=alg215,5374
+mcmcparams.initstate=initstate216,5431
+mcmcparams.variables=variables217,5468
+mcmcparams.priors=priors218,5511
+mcmcparams.data=data219,5547
+mcmcparams.runparams=runparams220,5566
+mcmcparams.stats=stats221,5622
+mcmcparams.stats={'mu reject',muf,muf/algparams.n}; % ,a,221,5622
+
+mcmc_ed_main3Dmarg.m,1678
+function 1,0
+%rwphi=rwphi24,958
+maxphi=25,984
+minphi=26,996
+sampcnt=27,1052
+savangles=28,1063
+%tauxon=tauxon36,1272
+tauzon=37,1283
+%phion=phion38,1293
+thetaon=39,1303
+N=52,1702
+N=size(X,1);halfN=52,1702
+n=53,1746
+subsample=54,1774
+% Priors58,1844
+mu0=60,1906
+mu0=params(1);mupp=60,1906
+mu0=params(1);mupp=1/params(2);  % mean and precision60,1906
+ataux=62,2015
+ataux=params(1);ktaux=62,2015
+atauz=64,2103
+atauz=params(1);ktauz=64,2103
+thetai=67,2153
+thetai=zeros(1,N);phi=67,2153
+rX=70,2195
+rpxy=rX.*sin(thetaX); % Projected to xy 74,2273
+si=102,2951
+ci=103,2967
+cphi=104,2983
+savcnt=107,3025
+mcmcrun=108,3035
+mcmcruntheta=109,3072
+burnin=117,3314
+bloks=118,3339
+nblok=119,3362
+nblok=120,3407
+nblok=121,3449
+rwstats.blocks=blocks122,3470
+prdmutau=124,3493
+musq=125,3519
+tauxsq=126,3541
+mus=127,3565
+tauxs=128,3586
+% Initial directions are mu,130,3610
+  V=131,3644
+  w=132,3683
+muf=135,3753
+acceg=136,3760
+bparp=149,4114
+bparp=pd(1)*pd(2)*bpar;bpar=149,4114
+Iprod=150,4156
+a=151,4207
+a=152,4412
+mu=pd(1);taux=155,4472
+%thetap=thetap176,4765
+thetap=178,4829
+sip=179,4886
+cip=180,4903
+alpha=182,4921
+alpha=183,4983
+alpha=184,5055
+  plot(189,5201
+%figure;figure195,5349
+%figure;figure196,5398
+%figure;figure197,5462
+J=202,5535
+sampcnt=211,5748
+  lastthetai=220,5975
+sampcnt=223,6001
+rg=239,6249
+% New directions V(:,1), V(256,6858
+mcmcparams.priors=priors269,7188
+mcmcparams.data=data270,7224
+mcmcparams.runparams=runparams271,7243
+%mcmcparams.stats=stats272,7299
+mcmcparams.mutaurw.stats=stats273,7356
+mcmcparams.mutaurw.burnindat=burnindat274,7390
+mcmcparams.laststate=laststate276,7456
+
+mcmc_ed_main3Dmodsel.m,2044
+function 1,0
+%rwphi=rwphi24,1052
+maxphi=25,1078
+minphi=26,1090
+sampcnt=27,1146
+EXPANDF=29,1158
+SHRINKF=30,1171
+tauxon=39,1347
+tauzon=40,1357
+%phion=phion41,1367
+thetaon=42,1377
+N=55,1775
+N=size(X,1);halfN=55,1775
+n=56,1819
+subsample=57,1847
+% Priors61,1917
+mu0=63,1979
+mu0=params(1);mupp=63,1979
+mu0=params(1);mupp=1/params(2);  % mean and precision63,1979
+ataux=65,2088
+ataux=params(1);ktaux=65,2088
+atauz=67,2176
+atauz=params(1);ktauz=67,2176
+%wtmuzero=wtmuzero70,2230
+%wtmunonzero=wtmunonzero71,2264
+thetai=74,2306
+thetai=zeros(1,N);phi=74,2306
+rX=77,2348
+rpxy=rX.*sin(thetaX); % Projected to xy 81,2426
+si=108,3103
+ci=109,3119
+cphi=110,3135
+muind=111,3150
+mcmcrun=115,3242
+mcmcruntheta=116,3279
+burnin=124,3530
+bloks=125,3555
+nblok=126,3578
+nblok=127,3623
+nblok=128,3665
+rwstats.blocks=blocks129,3686
+prdmutau=131,3709
+musq=132,3735
+tauxsq=133,3757
+mus=134,3781
+tauxs=135,3802
+% Directions are mu,137,3826
+V=138,3852
+w=139,3889
+muf=142,3920
+acceg=143,3927
+                        bparp=157,4254
+                        bparp=pd(1)*pd(2)*bpar;bpar=157,4254
+                        Iprod=158,4320
+a=159,4395
+a=160,4600
+mu=pd(1);%taux=taux163,4660
+                        bparp=178,4939
+                        bparp=pd(1)*pd(2)*bpar;bpar=178,4939
+                        Iprod=179,5005
+a=180,5080
+a=181,5285
+taux=185,5356
+%thetap=thetap205,5622
+thetap=207,5686
+sip=208,5743
+cip=209,5760
+alpha=211,5778
+alpha=212,5810
+alpha=213,5882
+  plot(218,6028
+%figure;figure224,6176
+%figure;figure225,6225
+%figure;figure226,6289
+J=231,6362
+sampcnt=240,6563
+sampcnt=246,6771
+rts=265,7003
+acceg=267,7072
+mcmcparams.alg=alg286,7337
+mcmcparams.initstate=initstate287,7395
+mcmcparams.variables=variables288,7432
+mcmcparams.priors=priors289,7475
+mcmcparams.data=data290,7511
+mcmcparams.runparams=runparams291,7530
+%mcmcparams.stats=stats292,7586
+mcmcparams.mutaurw.stats=stats293,7643
+mcmcparams.mutaurw.burnindat=burnindat294,7677
+mcmcrunphi=296,7743
+
+mcmc_ed_main3Drw.m,1589
+function 1,0
+%rwphi=rwphi24,881
+maxphi=25,907
+minphi=26,919
+sampcnt=27,975
+wt=28,986
+%tauxon=tauxon36,1142
+tauzon=37,1153
+phion=38,1163
+thetaon=39,1172
+N=52,1576
+N=size(X,1);halfN=52,1576
+n=53,1620
+subsample=54,1648
+% Priors58,1718
+mu0=60,1780
+mu0=params(1);mupp=60,1780
+mu0=params(1);mupp=1/params(2);  % mean and precision60,1780
+ataux=62,1889
+ataux=params(1);ktaux=62,1889
+atauz=64,1977
+atauz=params(1);ktauz=64,1977
+thetai=67,2027
+thetai=zeros(1,N);phi=67,2027
+rX=70,2069
+rpxy=rX.*sin(thetaX); % Projected to xy 74,2147
+si=102,2824
+ci=103,2840
+cphi=104,2856
+savcnt=107,2898
+mcmcrun=108,2908
+mcmcruntheta=109,2945
+burnin=117,3186
+bloks=118,3211
+nblok=119,3234
+nblok=120,3279
+nblok=121,3321
+rwstats.blocks=blocks122,3342
+prdmutau=124,3365
+musq=125,3391
+tauxsq=126,3413
+mus=127,3437
+tauxs=128,3458
+% Initial directions are mu,130,3482
+  V=131,3516
+   w=132,3555
+muf=135,3589
+acceg=136,3596
+a=150,4142
+mu=pd(1);taux=153,4196
+sd=180,4671
+phip=181,4727
+J=182,4772
+  %figure;figure184,4893
+  %sum(sum186,5026
+%thetap=thetap201,5226
+thetap=203,5290
+sip=204,5347
+cip=205,5364
+alpha=207,5382
+alpha=208,5414
+  plot(213,5587
+%figure;figure219,5735
+%figure;figure220,5784
+%figure;figure221,5848
+J=226,5921
+sampcnt=235,6122
+sampcnt=241,6329
+rg=258,6585
+% New directions V(:,1), V(276,7180
+mcmcparams.priors=priors289,7515
+mcmcparams.data=data290,7551
+mcmcparams.runparams=runparams291,7570
+%mcmcparams.stats=stats292,7626
+mcmcparams.mutaurw.stats=stats293,7683
+mcmcparams.mutaurw.burnindat=burnindat294,7717
+
+mcmc_ed_old.m,2395
+expansionfactor=11,153
+datset=12,187
+algstr=13,241
+path(16,266
+SAVDIR=25,521
+%dat=dat28,573
+unts=30,643
+FileName=35,743
+A=36,822
+dat=37,857
+dat=extract_sphericalcoords(A.iM_161122_161206_170130_170213_170309_9G3C_dmso_sel.plate.raw.delta);  % r,37,857
+J=43,1038
+dat=44,1061
+unts=50,1243
+params.mu=mu51,1268
+params.sig=sig52,1282
+FileNameSh=54,1334
+SAVDIR=56,1401
+%FileName=FileName63,1539
+FileName=64,1614
+%FileName=FileName65,1684
+%FileName=FileName70,1788
+A=71,1911
+%dat=dat72,1946
+%dat=extract_sphericalcoords(A.iM_161122_161206_170130_170213_170309_9G3C_dmso_sel.plate.raw.delta);  % r,72,1946
+%dat=dat73,2059
+%dat=extract_sphericalcoords(A.iM_RCENPC9G3_3uMnoc2hr.plate.raw.delta);  % r,73,2059
+%  dat=75,2146
+%  dat=extract_sphericalcoords(A.iM_160714_HHCENPA_untreated_pairedSelectedCentralised.plate.raw.delta);  % r,75,2146
+dat=76,2263
+dat=extract_sphericalcoords(A.iM_160714_HeCENPAttNdc80C_untreated_pairedSelectedCentralised.plate.raw.delta);  % r,76,2263
+%dat=dat78,2386
+%dat=dat79,2461
+%dat=dat80,2541
+J=86,2692
+dat=87,2715
+unts=93,2897
+params.mu=mu94,2922
+params.sig=sig95,2936
+J=97,2988
+   FileNameSh=105,3131
+FileNmaeSh=107,3159
+SAVDIR=109,3196
+J=119,3319
+% MCMC Run length. marg 125,3473
+algparams.priors.types=types140,3898
+algparams.priors.types={'Gaussian','Gamma','Gamma'}; % Gaussian mean variance,140,3898
+a=141,4037
+algparams.priors.params=params142,4042
+%algparams.priors.params=params143,4144
+J=151,4583
+J=152,4639
+   dphi=154,4702
+%algparams.modpriors=modpriors158,4734
+%algparams.modpriors=[0.5 0.5]; % mu prior 158,4734
+algparams.initthetas=initthetas165,4920
+algparams.initphis=initphis166,4981
+mu=171,5126
+algparams.init=init176,5225
+algparams.initthetas=initthetas177,5334
+algparams.initphis=initphis178,5379
+%algparams.initphis=initphis180,5482
+algparams.initphis=initphis181,5576
+%algparams.initthetas=initthetas197,5864
+%algparams.initphis=initphis198,5896
+%algparams.init(1)=0; % set mu=199,5940
+% MCMC algorithm. Phi is difference204,6006
+   mcmcparams.truevalues=truevalues211,6343
+mcmc.params.units=units213,6376
+mcmcparams.savedir=savedir214,6400
+mcmcparams.filename=filename215,6427
+mcmcparams.alg=alg216,6457
+mcmcparams.burnin=burnin217,6483
+% Look at phi,225,6694
+  options=226,6726
+  options.param=param227,6770
+options.param=param231,6912
+
+paper_figs.m,984
+fontsize=30,1126
+linewidth=31,1140
+boxs=32,1154
+RunDIR=50,1483
+  FigDIR=52,1511
+            RunDIR=59,1738
+algstr=66,1902
+dataid={exptnum,runtreatment};  % First is id below in FileNames{FileNames69,1954
+brkstr=71,2192
+   FileNameSh=79,2498
+treatnam=92,2996
+ExptDat=97,3032
+A=105,3254
+S=107,3304
+idfield=108,3318
+if ~isempty(findstr('untreated',S{j})) idfield=j; break;114,3400
+if ~isempty(findstr('DMSO',S{j})) idfield=j; break;121,3504
+if ~isempty(findstr('tax',S{j})) idfield=j; break;128,3612
+if ~isempty(findstr('noc2hr',S{j})) idfield=j; break;135,3731
+disp(140,3809
+kitdat=155,4249
+SAVDIR=163,4376
+paramnams=178,4744
+truevalues=179,4777
+burnin=180,4812
+mcmcrun=181,4839
+dat=182,4887
+figure;187,4951
+figure;hold on;187,4951
+str{str190,5062
+    J=192,5087
+str{str193,5110
+end194,5140
+hm=196,5173
+y=200,5285
+j=205,5354
+str=217,5918
+   str=219,5982
+figure;254,7093
+figure;hold on;254,7093
+j=257,7130
+hm=260,7236
+j=262,7250
+y=266,7363
+
+paper_figs_compare.m,898
+fontsize=29,950
+linewidth=30,964
+boxs=31,978
+RunDIR=49,1307
+  FigDIR=51,1335
+            RunDIR=58,1562
+algstr=65,1726
+figure;68,1766
+figure;hold on;68,1766
+figure;hold on; y=68,1766
+cnt=69,1800
+col=70,1808
+	dataid=74,1906
+	dataid={exptnum,runtreatment};  % First is id below in FileNames{FileNames74,1906
+brkstr=76,2144
+   FileNameSh=84,2450
+   treatnam=94,2861
+ExptDat=98,2894
+SAVDIR=106,3066
+paramnams=113,3282
+truevalues=114,3315
+burnin=115,3350
+mcmcrun=116,3377
+dat=117,3425
+j=124,3507
+str{str127,3593
+str{cnt}=runtreatments{k};cnt=127,3593
+str{str132,3716
+str{cnt}='Mean';cnt=132,3716
+  str=137,3887
+  str='Expt 3D';cnt=137,3887
+    J=139,3921
+str=140,3944
+str='Expt 3D (filtered)';cnt=140,3944
+end141,3981
+str=147,4181
+str='Mean data';cnt=147,4181
+y=149,4218
+figure;185,5054
+figure;hold on;185,5054
+j=188,5091
+hm=191,5197
+j=193,5211
+y=197,5324
+
+paper_figs_compareExpts.m,970
+% This plots the posteriors across different experiments 4,140
+  unts=32,1173
+fontsize=34,1241
+linewidth=35,1255
+boxs=36,1269
+RunDIR=54,1598
+FigDIR=57,1628
+            RunDIR=64,1853
+algstr=71,2017
+H=78,2068
+hold on;79,2079
+y=80,2089
+cnt=81,2107
+col=82,2115
+	dataid=86,2198
+	dataid={exptnum,runtreatment};  % First is id below in FileNames{FileNames86,2198
+brkstr=88,2436
+   FileNameSh=96,2742
+   treatnam=106,3153
+ExptDat=110,3186
+SAVDIR=119,3405
+paramnams=126,3621
+truevalues=127,3654
+burnin=128,3689
+mcmcrun=129,3716
+dat=130,3764
+j=137,3846
+str{str140,3932
+str{cnt}=ExptDats{exptnums{k}}.name;cnt=140,3932
+str{str145,4065
+cnt=146,4083
+str{str152,4253
+str{cnt}='Expt 3D';cnt=152,4253
+    J=154,4290
+str{str155,4313
+str{cnt}='Expt 3D (filtered)';cnt=155,4313
+end156,4355
+str{str162,4555
+str{cnt}='Mean data';cnt=162,4555
+y=164,4597
+figure;207,5589
+figure;hold on;207,5589
+j=210,5626
+hm=213,5732
+j=215,5746
+y=219,5859
+
+paper_figs_old.m,460
+fontsize=24,643
+linewidth=25,656
+boxs=26,669
+RunDIR=40,874
+FigDIR=41,896
+algstr=43,915
+dataid={exptnum,runtreatment};  % First is id below in FileNames{FileNames46,964
+brkstr=48,1199
+   FileNameSh=56,1497
+   treatnam=66,1719
+ExptDat=70,1748
+SAVDIR=77,1873
+paramnams=92,2204
+truevalues=93,2236
+burnin=94,2270
+mcmcrun=95,2296
+dat=96,2343
+figure;101,2402
+figure;hold on;101,2402
+J=102,2418
+hm=104,2463
+y=108,2571
+j=112,2634
+xlim(125,3023
+
+plot_data.m,671
+function 1,0
+nams=11,302
+SAVFILESTEM=13,349
+fontsize=15,382
+A=17,396
+fstr=20,464
+nams=22,481
+   treatments{treatments34,737
+ff=38,771
+dset=41,816
+x=42,846
+x=dset.x.all(:);  y=42,846
+x=dset.x.all(:);  y=dset.y.all(:);  z=42,846
+datsm{datsm44,936
+FileName=47,963
+figure;48,993
+xlabel('x','FontSize',fontsize)50,1019
+ylabel('y','FontSize',fontsize)51,1052
+zlabel('z','FontSize',fontsize)52,1085
+dset=60,1346
+x=61,1371
+x=dset.x.all(:);  y=61,1371
+x=dset.x.all(:);  y=dset.y.all(:);  z=61,1371
+datsp{datsp63,1461
+figure;65,1480
+xlabel('x','FontSize',fontsize)67,1506
+ylabel('y','FontSize',fontsize)68,1539
+zlabel('z','FontSize',fontsize)69,1572
+
+plot_inflatedat.m,131
+  fontsize=8,167
+figure;10,183
+xlabel('IntraKT distance (3D)','FontSize',fontsize)12,211
+figure;21,424
+figure; subplot(21,424
+
+plot_mcmc_ang.m,424
+function 1,0
+    singlefig=17,592
+figure;21,638
+J=28,794
+mvs=29,844
+poormovers=31,889
+means=34,918
+stds=35,958
+if singlefig subplot(2,3,2); else figure;38,1018
+if singlefig subplot(2,3,3); else figure;44,1138
+hold on;45,1184
+J=47,1214
+if singlefig subplot(2,3,4); else figure;58,1459
+if singlefig subplot(2,3,5); else figure;62,1581
+if singlefig subplot(2,3,6); else figure;67,1793
+z=68,1839
+SAVDIR=78,2191
+
+simulate_3DdataFromMCMC.m,348
+function dat=1,0
+blks=21,530
+sigxv=22,560
+sigxv=1./sqrt(mcmcrun(:,3));sigzv=22,560
+		theta=28,676
+sigx=29,698
+sigx=sigxv(k);sigz=29,698
+% random direction. Distribution is \propto sin(theta), so cos(31,730
+	  theta=36,894
+phi=39,922
+x=42,1008
+y=43,1050
+z=44,1092
+% Compute shift theta,46,1126
+r=47,1174
+thetaX=48,1195
+phiX=50,1214
+
+simulate_3DdataFromMCMC_v2.m,324
+function dat=1,0
+blks=18,486
+M=24,606
+   M=27,669
+sigxv=31,718
+sigxv=1./sqrt(mcmcrun(:,2));sigzv=31,718
+sigxm=32,775
+sigxm=sigxv*ones(1,M);sigzm=32,775
+muv=33,820
+phi=43,1017
+x=46,1114
+y=47,1160
+z=48,1206
+% Compute shift theta,51,1244
+r=52,1292
+thetaX=53,1316
+phiX=55,1336
+phiX=58,1386
+%size(size61,1495

@@ -1,0 +1,143 @@
+function divs =diversitymeasure_v2(dat,dispon)
+  % divs =diversitymeasure(dat,dispon)
+  %
+  % Give dat structure.
+  % (r theta phi sis-pair-id sis zfilterFlag cell-id KTpair-idKiT)
+  % 
+  % This counts number of cells, KTs, paired KTs and Simpson index for cells (to give effective cell sample size)
+  %
+  % This calculates the simpson index for effective number of cells
+  % 
+  % display is on if dispon=1. dispon=2 is for debugging
+  %
+  % When data pooled:
+  % This assumes sis1 all come first. Then ties up sections to find unique cells.
+  %
+  % NJB March 2020
+
+
+  
+% Remove KTs with no data
+  J=find(isnan(dat(:,1)));
+if ~isempty(J)
+dat(J,:)=[];
+end
+  
+poolalg=0;
+cels=dat(:,7); 
+sis=dat(:,5);   % All sis 1 first
+pairid=dat(:,4); % Monotonic
+
+% Split into sis1,sis2.
+J1=find(sis==1);  J2=find(sis==2);
+
+% Find when cell number decreases- evidence of pooling
+brs=find(diff(cels)<0)+1; % should be 1 at J2(1).
+brs1=intersect(brs,J1);
+brs2=intersect(brs,J2);
+brs2(1)=[];
+
+% KTs may not be paired, eg a cell could have only KT1.
+
+celljump=max(cels)+5;
+if length(brs1)>0 || length(brs2)>0
+disp('Data pooling detected.')
+poolalg=1;
+
+ebrs1=[1; brs1; J1(end)+1];
+ebrs2=[J2(1); brs2; J2(end)+1];
+%length(pairid)
+  for k1=1:(length(ebrs1)-1)
+	   for k2=1:(length(ebrs2)-1)
+		    pairoverlap(k1,k2)=length(intersect(pairid(ebrs1(k1):(ebrs1(k1+1)-1)),pairid(ebrs2(k2):(ebrs2(k2+1)-1))));
+end
+if ~isempty(find(pairoverlap(k1,:)))
+map1(k1)=find(pairoverlap(k1,:));
+ else
+   map1(k1)=0;
+end
+
+end
+
+for k2=1:(length(ebrs2)-1)
+	 if ~isempty(find(pairoverlap(:,k2)))
+	 map2(k2)=find(pairoverlap(:,k2));
+	 else
+	   map2(k2)=0;
+end
+
+end % k2
+
+% From overlaps can identify sections from same experiments.
+% Only one entry in each column/row will be non-zero 
+
+npools=max(size(pairoverlap));
+
+if dispon==2
+figure;hold on
+plot(cels)
+end
+  
+sec1=1;sec2=1;
+for i=1:npools
+
+	if map1(sec1)==0
+	cels(ebrs1(sec1):J1(end))=cels(ebrs1(sec1):J1(end))+celljump;
+sec1=sec1+1;
+	else
+if map2(sec2)==0
+	  cels(ebrs2(sec2):J2(end))=cels(ebrs2(sec2):J2(end))+celljump;
+sec2=sec2+1;
+ else % Must be joint
+
+	  if map1(sec1)~=sec2 |  map2(sec2)~=sec1 
+   disp('*** Error in matching pooled data. ignore counts. ***');
+	  end
+
+	cels(ebrs1(sec1):J1(end))=cels(ebrs1(sec1):J1(end))+celljump;
+	  cels(ebrs2(sec2):J2(end))=cels(ebrs2(sec2):J2(end))+celljump;
+	  sec1=sec1+1;
+sec2=sec2+1;
+	end % map2
+	end % map 1
+end %i
+
+	if dispon==2
+	plot(cels,'r')
+	  xlabel('KT');ylabel('Cell id (arbitrary)'); 
+end
+
+cels=cels-min(cels)+1;
+
+end % Breaks detected
+
+%figure;plot(cels)
+
+% Change cels to rank so labelled 1:numcels
+
+[cellids IA IC]=unique(cels); % cels(:)=cellids(IC)
+cnts=hist(IC,1:max(IC)); % counts of KT pairs per cell, including paired
+SI=sum((cnts/sum(cnts)).^2);
+
+cntspairs=hist(pairid,1:max(pairid));
+npaired=sum(cntspairs==2);
+%nsingleKTs=sum(cntspairs==1)
+
+if dispon
+disp('KT counts (ignoring pairing)');
+disp(['Number cells ' num2str(length(cellids)) ', number KTs ' num2str(length(cels)) ', average KTs/cell ' num2str(length(cels)/length(cellids)) ', number pairs of KTs ' num2str(npaired)]);
+disp(['Effective (cell) sample size is ' num2str(1/SI)]);
+end
+
+if length(cels)<300
+disp('WARNING: fewer than 300 KT. Algorithm performance poor especially for distances < 30nm');
+end
+
+if 5*SI>1
+disp('Effective number of cells is <5. Biological variation will make estimates unreliable.');
+end
+
+ncells=length(cellids);
+nKTs=length(cels);
+
+divs=[SI ncells nKTs npaired];

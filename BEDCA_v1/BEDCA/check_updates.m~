@@ -1,0 +1,6 @@
+
+
+% ktaux+0.5*(sumSqrpxy+sum((mu*si).^2-2*mu*rpxy.*si.*cphi))
+
+si = sin(dat(:,5));  % True values
+sXi = sin(dat(:,2));

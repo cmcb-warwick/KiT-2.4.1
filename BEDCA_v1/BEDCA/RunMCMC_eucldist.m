@@ -1,0 +1,263 @@
+function [convergencediagnos SAVDIR]=RunMCMC_eucldist(dat,ExptDat,nam,rundata,RunDIR,implot,modoptions)
+% [convergencediagnos SAVDIR]=RunMCMC_polewardhMCSisters(TrajDat,ExptDat,nam,rundata,RunDIR,implot,modoptions)
+%
+% Runs the MCMC on given 3D data 
+% dat is matrix with columns r, theta. Extra columns for simulated data
+%
+% runparams (optional) is a structure with alg params, init cond and priors
+%    Uses defaults if absent
+%
+% ExptDat is data source info; not used below unless defaults called.
+% Has structure ExptDat.name ExptDat.fluorophore (GFP, Ab)
+%
+% nam is name of mcmc run (file storage name etc).
+%
+% modoptions (cellarray) of has model options including:
+%   NONE. Set to [].
+%
+% implot=1 To plot figures. These are also saved.
+%
+% Returns a convergence diagnostic structure (test_convergence)
+% Saves samples (post burnin) of chain 1 in MCMCSamples_chain1.csv
+%
+% Burroughs. July 2017. Modified Oct 2020.
+
+
+%
+% Euclidean distance correction  algorithm (marginalised likelihood over phi)
+%
+% See tex document euclideanEstimators.tex
+%
+
+datestamp=clock;
+
+if isempty(modoptions) % Not used at present
+
+disp('');
+
+end
+
+ModNam='EuclDistMarg';
+
+% Output flag.
+% implot=1; % Set =0 if batch run
+SAVDIR=[];
+
+%
+% Load priors, initial conditions etc
+%
+if isempty(rundata)
+
+defaults_EuclDist % This generates Dat structure
+
+ else
+% Unpack rundata. initparams...
+
+priors=rundata.priors;
+%initparams=rundata.initparams;
+%randomiseinit=rundata.randomiseinit;
+paramnames=rundata.paramnames;
+params=rundata.scaleparams;
+
+%
+% MCMC run paramsters
+%
+numchains=rundata.numchains;
+subsample=rundata.subsample;
+burnin=rundata.burnin;  % Change burnin as appropriate
+
+%randomisationerr = rundata.randomisationerr;
+%randomisationExpand = rundata.randomisationExpand;
+%init_hMC = rundata.init_hMC; % theta values
+
+SAVDIR=rundata.savdir;
+
+end
+
+
+%
+%
+% Saving file name stem
+FileNam= ['MCMC_' ModNam];
+
+% make storage DIR
+SAVDIR=[RunDIR '/' SAVDIR '_' nam];  % 
+[status,message,messageid] = mkdir(SAVDIR);
+[status,message,messageid] = mkdir([SAVDIR '/' FileNam 'Figs']);
+
+% Plot original 3D data
+
+if implot
+plot_inflatedat(dat,[SAVDIR '/' FileNam]);
+end
+
+% Run over multiple runs
+disp(['Running MCMC (' num2str(numchains) ' runs), model ' ModNam ' : stem name: ' nam]);
+
+for r=1:numchains  % Multiple chains
+
+disp(['Running chain ' num2str(r)]);
+	
+%
+% 
+% MC inititialisation. MC variables are mu, taux, tauz
+% 
+%
+
+%initparams_loaded=initparams;
+ 
+switch rundata.initialisetype
+case 'true'
+
+% Load initial conditions.
+rundata.init=[params.mu params.sig];   % True values
+rundata.initthetas=dat(:,5);           % True thetas vec n
+rundata.initphis=zeros(size(dat,1),1); % True values vec n. Angle relative to true vector
+
+case 'priors'  % Draw from priors.
+
+% mu. Positive.
+mu=prior_draw(rundata.priors,'mu');
+while (mu < 0)
+   mu=prior_draw(rundata.priors,'mu');
+end
+
+rundata.init=[mu 1/sqrt(prior_draw(rundata.priors,'taux')) 1/sqrt(prior_draw(rundata.priors,'tauz'))];
+rundata.initthetas=pi*rand(size(dat,1),1);
+rundata.initphis=normrnd(0,params.sig(1)/(100*params.mu),size(dat,1),1); % Based on expected values
+
+%rundata.initphis=2*pi*rand(size(dat,1),1)-pi; % This causes convergence problems. too wide
+rundata.initphis=rundata.initphis-pi*floor(rundata.initphis/pi);
+
+case 'Overdispersed'  % Beta.
+
+disp(['Using over dispersed initial conditions  with expansion factor '  num2str(randomisationExpand)]);
+
+disp('To write this')
+bob
+for jj=5:10
+  initparams(jj)=betarnd(0.5,0.5)*initparams(jj)*randomisationExpand;
+end
+
+
+otherwise
+ disp(['No such initialidsation type as ' initialisetype]);
+ disp('ABORTING.');
+return
+
+end
+
+
+% Main loop routine. Returns samples as matrix.
+if rundata.verbose
+disp(['Burnin ' num2str(burnin) ', subsampling rate ' num2str(subsample)]);
+end
+
+[mcmcparams, mcmcrun, mcmcruntheta, mcmcrunphi]=mcmc_ed_main3Dmarg(dat(:,[1 2]),rundata);
+
+mcmcparams.Expt=ExptDat;
+mcmcparams.nam=nam;
+mcmcparams.model='Euclidean Distance 3D correction: marginalised likelihood';
+mcmcparams.modelstem=ModNam;
+mcmcparams.alg=rundata;
+mcmcparams.filename=FileNam;
+mcmcparams.chain=r;
+mcmcparams.savedir=SAVDIR;
+mcmcparams.datestamp=datestamp; % All chains get same date stamp.
+mcmcparams.varnames=paramnames;
+mcmc.params.units=rundata.unts;
+mcmcparams.priors=priors;
+mcmcparams.datafile=dat;
+if size(dat,2)>6
+mcmcparams.diversityid={'Simpson Index','Num cells','Num KTs','Num KTpairs'};
+mcmcparams.diversity=diversitymeasure_v2(dat,0);
+end
+
+%mcmcparams.initialparams_loaded=initparams_loaded;
+mcmcparams.runlength=size(mcmcrun,1);
+mcmcparams.subsample=subsample;
+mcmcparams.burnin=ceil(burnin/subsample);
+mcmcparams.truevalues=rundata.truevalues;
+
+
+% save output/analyse.
+save 'RunDump_EuclDist';  % Generic dump
+
+if ~isempty(SAVDIR)
+save([SAVDIR '/' FileNam 'output' num2str(r) '.mat'],'mcmcrun','mcmcparams','mcmcruntheta','mcmcrunphi','-v7.3');
+disp(['Saved run at ' SAVDIR '/' FileNam 'output' num2str(r) '.mat']);
+end
+
+% Compute correlations between variables
+  
+if rundata.verbose
+disp('Correlation matrix between variables')
+  disp(array2table(corr(mcmcrun(mcmcparams.burnin:end,:)),'RowNames',mcmcparams.varnames,'VariableNames',mcmcparams.varnames));   %{'Correlations'}))
+end 
+
+if implot
+close all
+dphi=[]; % Correct this for simulated
+if r==1 % Chain 1 only
+  plot_mcmcRun_basicvariables(mcmcparams,mcmcrun,mcmcparams.burnin); % Save the first run
+  % Look at phi, theta variables.
+  options=mcmcparams; % SAVDIR and filename
+  options.param='phi';
+if ~isempty(mcmcrunphi)
+[poormovers_phi mvs]=plot_mcmc_ang(mcmcrunphi,dphi,mcmcparams.burnin,50,options);     % phi
+end
+options.param='theta';
+if rundata.verbose
+[poormovers_theta mvs]=plot_mcmc_ang(mcmcruntheta,[],mcmcparams.burnin,50,options); % theta
+end
+
+% Create outputs
+tab=create_outputs(dat,mcmcparams,mcmcrun,100000,1);
+savetable(tab,[SAVDIR '/SummaryStats_chain1.csv']);
+%tab.zfilterz=rundata.filters.zfilterz;
+
+if ~isempty(SAVDIR)
+save([SAVDIR '/MCMCStats_chain' num2str(r) '.mat'],'tab');
+end
+
+ else
+   mcmcparams_dummy=mcmcparams;
+   mcmcparams_dummy.savedir=[];
+%   plot_mcmcRun_basicvariables(mcmcparams_dummy,mcmcrun,mcmcparams.burnin);
+end
+end %implot
+
+%
+% This saves  a csv file of sample data after burnin
+if r==1 & ~isempty(SAVDIR)
+  writetable(array2table(mcmcrun(mcmcparams.burnin:end,:),'VariableNames',mcmcparams.variables),[SAVDIR '/MCMCSamples_chain1.csv']);
+end
+
+end %r loop
+
+if implot
+disp(['First chain statistics:'])
+  disp(tab)
+end
+
+if numchains>2
+mcmcdiagnos=test_convergencemcmcRuns(SAVDIR,FileNam,numchains,[],implot,1); % test convergence of model
+str=warningsconvergence_BEDCA(mcmcdiagnos.GR);
+mcmcdiagnos.warnings=str;
+
+if ~isempty(mcmcdiagnos)
+convergencediagnos=mcmcdiagnos; 
+
+if ~isempty(SAVDIR) 
+save([SAVDIR '/' FileNam 'convergencediag.mat'],'mcmcdiagnos');
+disp(['Saved run at ' SAVDIR '/' FileNam 'convergencediag.mat']);
+end
+end
+
+ else
+  convergencediagnos=[];
+end
+
+%list_unconvergedruns(convergencediagnos,'GR',[1.1 0])
+
+end % function

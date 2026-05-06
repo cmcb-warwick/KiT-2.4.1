@@ -1,0 +1,224 @@
+function [mcmcparams, mcmcrun, mcmcruntheta, mcmcrunphi]=mcmc_ed_main3D(X,algparams)
+% [mcmcparams, mcmcrun, mcmcruntheta]=mcmc_ed_main3D(X,algparams)
+  %
+  % This is an MCMC algorithm for 3D inflation removal from Euclidean distance measurements.
+  %
+  % Data X is matrix of (d,theta_X) (3d spherical coordinates r theta), N x 2
+  %
+  % Parameters mu, sigx, sigz
+  % Angular distribution assumed uniform
+  %
+  % algparams.n Number steps
+  % algparams.init Initial conditions mu sigmax sigmax
+  % algparams.SAVDIR  Save runs to file periodically
+  % algparams.priors Priors on mu and sigmax, sigmaz
+  %
+    % Returns mcmcrun with variable samples and mcmcruntheta the theta samples
+    %
+    %
+  % NJB May 2017
+
+% algorithm params
+dtheta=0.75;
+%rwphi=0.025; % Walk size
+maxphi=0.5;minphi=0.0125; % Min and max allowed sd of phi proposal
+sampcnt=0;
+
+%
+disp('MCMC for anisotropic inflation model. v1 NJB2017');
+disp(['Steps ' num2str(algparams.n)]);
+
+% switch variable on/off for debugging
+muon=0;
+tauxon=1;
+tauzon=1;
+phion=1;
+thetaon=1;
+
+if sum([muon tauxon tauzon phion thetaon])<5
+if muon disp('mu is ON **'); else disp('mu is OFF'); end
+if tauxon disp('taux is ON **'); else disp('taux is OFF'); end
+if tauzon disp('tauz is ON **'); else disp('tauz is OFF'); end
+if phion disp('phi_i is ON **'); else disp('phi_i is OFF'); end
+if thetaon disp('theta_i is ON **'); else disp('theta_i is OFF'); end
+end
+
+%
+% Set up algorithm MC
+%
+N=size(X,1);halfN=N/2; % Number data points
+n=algparams.n; % MCMC steps
+subsample=algparams.subsample;
+
+disp(['data set size ' num2str(N)]);
+
+% Priors
+[params typ]=get_priorparams(algparams.priors,'mu');
+mu0=params(1);mupp=1/params(2);  % mean and precision
+[params typ]=get_priorparams(algparams.priors,'taux');
+ataux=params(1);ktaux=params(2);
+[params typ]=get_priorparams(algparams.priors,'tauz');
+atauz=params(1);ktauz=params(2);
+
+% MCM variables
+thetai=zeros(1,N);phi=zeros(1,N);
+
+% Data
+rX=X(:,1)';     % Radial coord
+thetaX=X(:,2)'; % Theta angle
+
+% Summary stats
+rpxy=rX.*sin(thetaX); % Projected to xy (positive)
+rpz=rX.*cos(thetaX);  % Projected to z (which can be negative)
+
+sumSqrpxy=sum(rpxy.^2);
+sumSqrpz=sum(rpz.^2);
+
+% Initialise MC from given initialisation
+mu=algparams.init(1);
+sigx=algparams.init(2);taux=1/sigx^2;
+sigz=algparams.init(3);tauz=1/sigz^2;
+thetai=algparams.initthetas';
+phi=algparams.initphis';
+
+if (0==1) % initialisation done in mcmc_ed
+% Initialise MCMC. 'True', 'Priors' draw from prior. 'OverDispersed'
+switch algparams.initialise
+case 'True'
+
+case 'Randomise'
+
+otherwise
+disp('Something has gone wrong in initialisation of MC: ABORT');
+return;
+end
+end
+
+
+% Create accessory variables of mcmc hidden variables 
+si=sin(thetai);
+ci=cos(thetai);
+cphi=cos(phi);
+
+% Save initial conditions
+savcnt=1;
+mcmcrun=zeros(floor(n/subsample),3);
+mcmcruntheta=zeros(floor(n/subsample),N);
+
+mcmcrun(savcnt,:)=[mu, taux, tauz];
+mcmcruntheta(savcnt,:)=thetai;  %  Angular variables thetai
+mcmcrunphi(savcnt,:)=phi;       %  Angular variables phi
+
+% Alg stats
+muf=0;
+
+for k=1:algparams.n % main loop with k steps
+
+% Update mu. Normal.
+if muon
+	a=mupp+taux*sum(si.^2)+tauz*sum(ci.^2);
+        b=-mu0*mupp-taux*sum(rpxy.*si.*cphi)-tauz*sum(rpz.*ci);
+
+	mup=normrnd(-b/a,1/sqrt(a));
+	if mup>=0 % Constrain to be positive
+	mu=mup;
+muf=muf+1;
+end
+end % muon
+
+% Update sigx Gamma
+
+if tauxon
+%ataux+N-1.5
+%ktaux+0.5*(sumSqrpxy+sum((mu*si).^2-2*mu*rpxy.*si.*cphi))
+taux=gamrnd(ataux+N-1.5,1/(ktaux+0.5*(sumSqrpxy+sum((mu*si).^2-2*mu*rpxy.*si.*cphi))));
+
+end
+
+% Update sigz Gamma
+if tauzon
+   tauz=gamrnd(atauz+halfN-1.5,1/(ktauz+0.5*sum((mu*ci-rpz).^2)));
+end
+
+%
+% Update phi_i. A MH.
+%
+if phion
+% phi MH
+%figure;hist(sqrt(1./(mu*taux*rpxy.*si)),100);
+sd=max(minphi,min(maxphi,sqrt(1./(mu*taux*rpxy.*si))));
+phip=normrnd(0,sd); % precision is always >0
+J=exp(mu*taux*rpxy.*si.*(cos(phip)-cos(phi))+0.5*(phip.^2-phi.^2)./sd.^2)>rand(1,N);    % accept/reject. Prior is flat.
+
+  %figure;hist(min(3,exp(mu*taux*rpxy.*si.*(cos(phip)-cos(phi)))),0.01:0.01:3)
+  %sum(exp(mu*taux*rpxy.*si.*(cos(phip)-cos(phi)))>1)
+  %sum(J)
+
+if ~isempty(J)
+phi(J)=phip(J);
+cphi(J)=cos(phi(J));
+end
+
+end %if phion		  
+
+%
+% Update theta_i. A random walk (untuned)
+%
+if thetaon
+
+%thetap=thetaX+normrnd(0,1./sqrt(rpxy*taux+rpz*tauz));
+%thetap=thetap-2*pi*round(thetap/(2*pi)); % Places in (-pi,pi)
+
+thetap=thetai+normrnd(0,dtheta*ones(1,N)); % random walk
+sip=sin(thetap);
+cip=cos(thetap);
+
+alpha=sin(thetap)./sin(thetai);
+alpha=alpha.*exp(-0.5*(taux*((mu*sip-rpxy.*cphi).^2-(mu*si-rpxy.*cphi).^2)+tauz*((mu*cip-rpz).^2-(mu*ci-rpz).^2)));
+
+if sum(~isreal(thetap)) >0
+taux, tauz
+  figure; hold on
+  plot(rpxy*taux+rpz*tauz)
+    disp(['Count <= 0 =' num2str(sum(rpxy*taux+rpz*tauz<0))])
+  return;
+end
+
+%size(thetap),size(rpxy.*cphi),size(thetai)
+%figure;hist(thetap-thetai,100);xlabel('dtheta')
+%figure;hist((mu*sip-rpxy.*cphi).^2-(mu*si-rpxy.*cphi).^2,100);
+%figure;
+%[Y I]=sort(alpha);
+%plot(alpha(I));
+%[min(alpha), max(alpha)]
+
+J=thetap>0 & alpha>rand(1,N);  % Reject if negative.
+if ~isempty(J)
+thetai(J)=thetap(J);
+ci(J)=cip(J);si(J)=sip(J); % Update variabels and associated data.
+end
+
+end % thetaon
+
+% Save data periodically
+sampcnt=sampcnt+1;
+if sampcnt>=subsample
+savcnt=savcnt+1;
+mcmcrun(savcnt,:)=[mu, taux, tauz];
+mcmcruntheta(savcnt,:)=thetai;  % Angular varaibles thetai
+mcmcrunphi(savcnt,:)=phi;  % Angular varaibles thetai
+sampcnt=0;
+end
+
+end % k
+
+mcmcparams.alg='Eucl. Inflation correction. Basic alg.';
+mcmcparams.initstate=algparams.init;
+mcmcparams.variables={'mu','taux','tauz'};
+mcmcparams.priors=algparams.priors;
+mcmcparams.data=X;
+mcmcparams.runparams=[algparams.n algparams.subsample];
+mcmcparams.stats={'mu reject',muf,muf/algparams.n}; % ,a,b};
+  
+
+

@@ -1,0 +1,21 @@
+function unpack_dataGrp(DIR,filenam,prestem)
+  %
+  %
+  % This unpacks a .mat file with multuiple data sets
+  %
+  % NJ 2020
+
+
+  hom=pwd;
+cd(DIR)
+
+A=load(filenam)
+
+for f=fieldnames(A)
+  save([prestem f],A.f);
+end
+  
+
+
+
+cd(hom)

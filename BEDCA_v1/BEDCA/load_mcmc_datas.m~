@@ -1,0 +1,16 @@
+function D=load_mcmc_datas(exptnum,runtreatment,specnam)
+%
+  %
+  %
+  %
+% NOTE.
+% This loads the runs and stats if only one run. You can comment out.
+
+
+
+  
+  
+mcmcdat=load_mcmc_runs([RunDIR '/' algparams.savdir '_' nam],['MCMC_' ModNam],[],'single');
+[mcmcparams mcmcrun mcmcruntheta mcmcrunphi]=unpack_mcmcdat(mcmcdat);
+load([RunDIR '/' algparams.savdir '_' nam '/MCMCStats.mat']);  % loads tab
+end
